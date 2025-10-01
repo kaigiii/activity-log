@@ -9,10 +9,7 @@ jobs:
   ##################################################
   build:
     runs-on: ubuntu-latest
-    # 我們不再需要從 job 層級輸出 artifact_name，因為它是一個固定的名稱
     outputs:
-      # 保留這個 output，因為後續的 O 級任務需要它
-      # 如果您還沒做到 O 級任務，這行可以先忽略
       new_version: ${{ steps.version.outputs.new_version }}
     steps:
       - name: 1. Checkout Repository
@@ -27,7 +24,6 @@ jobs:
         run: npm install
 
       - name: 4. Run Build Script
-        # 假設您已經修正了 package.json 中的 build 指令
         run: npm run build
 
       - name: 5. Archive Production Artifact
@@ -38,8 +34,6 @@ jobs:
           cp package.json artifact/
           cp README.md artifact/
 
-      # ✨ --- 修正點 1 --- ✨
-      # 直接提供一個固定的 artifact 名稱
       - name: 6. Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -54,20 +48,20 @@ jobs:
     runs-on: ubuntu-latest
     environment: staging
     steps:
-      # ✨ --- 修正點 2 --- ✨
-      # 使用與上傳時相同的固定名稱來下載
       - name: 1. Download Build Artifact
         uses: actions/download-artifact@v4
         with:
           name: build-artifact
 
+      # ✨ --- 修正點 1 --- ✨
+      # 在 gh release create 命令中明確指定倉庫
       - name: 2. Create Staging Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ vars.BUILD_TAG }}
           NOTE: ${{ vars.RELEASE_NOTE }}
         run: |
-          gh release create "$TAG" ./* --title "Staging Release: $TAG" --notes "$NOTE"
+          gh release create "$TAG" ./* --title "Staging Release: $TAG" --notes "$NOTE" --repo ${{ github.repository }}
 
   ##################################################
   # 3. DEPLOY TO PRODUCTION JOB: 部署到 Production 環境 #
@@ -77,17 +71,17 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-      # ✨ --- 修正點 3 --- ✨
-      # 使用與上傳時相同的固定名稱來下載
       - name: 1. Download Build Artifact
         uses: actions/download-artifact@v4
         with:
           name: build-artifact
 
+      # ✨ --- 修正點 2 --- ✨
+      # 在 gh release create 命令中明確指定倉庫
       - name: 2. Create Production Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ vars.BUILD_TAG }}
           NOTE: ${{ vars.RELEASE_NOTE }}
         run: |
-          gh release create "$TAG" ./* --title "Production Release: $TAG" --notes "$NOTE"
+          gh release create "$TAG" ./* --title "Production Release: $TAG" --notes "$NOTE" --repo ${{ github.repository }}
