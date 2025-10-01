@@ -36,14 +36,14 @@ async function updateReadme(activity) {
         if (currentSection.replace(/\s+/g, ' ').trim() === activity.replace(/\s+/g, ' ').trim()) {
             core.notice('📄 No changes in README.md, skipping...');
             if (process.env.ACT) {
-                core.debug('🚧 Act-Debug mode enabled)')
+                core.debug('🚧 Act-Debug mode enabled)');
                 console.log(activity);
             }
             return;
         }
 
         if (process.env.ACT) {
-            core.debug('🚧 Act-Debug mode enabled)')
+            core.debug('🚧 Act-Debug mode enabled)');
             console.log(activity);
             return;
         }
@@ -77,7 +77,7 @@ async function updateReadme(activity) {
             repo,
             base_tree: treeSha,
             tree: [{
-                path: readmePath.replace(/^.*[\\\/]/, ''),
+                path: readmePath.replace(/^.*[\\/]/, ''),
                 mode: '100644',
                 type: 'blob',
                 content: updatedContent

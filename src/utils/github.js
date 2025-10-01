@@ -11,6 +11,7 @@ async function fetchAllStarredRepos() {
     let starredRepos = [];
     let page = 1;
 
+    // eslint-disable-next-line no-constant-condition
     while (true) {
         try {
             const { data: pageStarredRepos } = await octokit.rest.activity.listReposStarredByAuthenticatedUser({
@@ -46,7 +47,7 @@ async function isTriggeredByGitHubActions(event) {
 
     if (!sha || !fullName) return false;
 
-    const [owner, repo] = fullName.split("/");
+    const [owner, repo] = fullName.split('/');
     const { data: commit } = await octokit.rest.repos.getCommit({
         owner,
         repo,
@@ -63,7 +64,7 @@ async function isTriggeredByGitHubActions(event) {
         commit?.commit?.committer?.email,
     ].filter(Boolean);
 
-    const message = commit?.commit?.message || "";
+    const message = commit?.commit?.message || '';
 
     const messageLooksAutomated =
         /\bci\b|^chore(\(|:)|^build(\(|:)|dependabot/i.test(message);
@@ -132,7 +133,7 @@ async function fetchAndFilterEvents() {
             if (page > 3) {
                 core.warning(`⚠️ Due to github limitations, only the last ${allEvents.length} events (${filteredEvents.length} after filtering) will be displayed.`);
                 break;
-            };
+            }
             const additionalEvents = await fetchEvents(page);
 
             if (additionalEvents.length === 0) break;

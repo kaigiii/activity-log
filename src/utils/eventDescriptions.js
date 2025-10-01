@@ -171,7 +171,7 @@ const eventDescriptions = {
         const commitUrl = `https://github.com/${repo.name}/commit/${comment.commit_id}`;
         const commentUrl = `${commitUrl}#commitcomment-${comment.id}`;
         return isPrivate
-            ? `🗣 Commented on a commit in a private repo`
+            ? '🗣 Commented on a commit in a private repo'
             : `🗣 Commented on [\`${comment.commit_id}\`](${commentUrl}) in [${repo.name}](https://github.com/${repo.name})`;
     },
 
@@ -194,7 +194,7 @@ const eventDescriptions = {
         const prUrl = `https://github.com/${repo.name}/pull/${pr.number}`;
         const commentUrl = `${prUrl}#pullrequestreviewcomment-${comment.id}`;
         return isPrivate
-            ? `🗣 Commented on a review of a PR in a private repo`
+            ? '🗣 Commented on a review of a PR in a private repo'
             : `🗣 Commented on a review of [PR #${pr.number}](https://github.com/${repo.name}/pull/${pr.number}) in [${repo.name}](https://github.com/${repo.name}): [View Comment](${commentUrl})`;
     },
 
