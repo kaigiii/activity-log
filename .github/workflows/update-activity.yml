@@ -24,11 +24,10 @@ jobs:
           # 建議這裡使用您自己的 GitHub 用戶名來測試
           GITHUB_USERNAME: "kaigiii" 
           
-          # ✨ --- 唯一的修正點在這裡 --- ✨
           # 將 secrets.TOKEN 改為 secrets.GITHUB_TOKEN
           GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
-          
           EVENT_LIMIT: 10
+          TARGET_REPOS: "kaigiii/activity-log"
           OUTPUT_STYLE: MARKDOWN
           # 如果沒有要忽略的事件，可以省略此行
           # IGNORE_EVENTS: "[]"
