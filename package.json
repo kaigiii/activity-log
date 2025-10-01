@@ -5,8 +5,10 @@
 		"axios": "^1.11.0"
 	},
 	"scripts": {
-		"build": "ncc build src/index.js --license licenses.txt"
-	},
+	  "build": "ncc build src/index.js --license licenses.txt",
+	  "lint": "eslint src/**/*.js",
+	  "start": "node src/index.js"
+	}
 	"devDependencies": {
 		"@vercel/ncc": "^0.38.3",
 		"eslint": "^8.57.0"
