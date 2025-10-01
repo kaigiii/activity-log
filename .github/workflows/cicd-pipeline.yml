@@ -9,8 +9,11 @@ jobs:
   ##################################################
   build:
     runs-on: ubuntu-latest
+    # 我們不再需要從 job 層級輸出 artifact_name，因為它是一個固定的名稱
     outputs:
-      artifact_name: build-artifact-${{ github.run_id }}
+      # 保留這個 output，因為後續的 O 級任務需要它
+      # 如果您還沒做到 O 級任務，這行可以先忽略
+      new_version: ${{ steps.version.outputs.new_version }}
     steps:
       - name: 1. Checkout Repository
         uses: actions/checkout@v4
@@ -24,6 +27,7 @@ jobs:
         run: npm install
 
       - name: 4. Run Build Script
+        # 假設您已經修正了 package.json 中的 build 指令
         run: npm run build
 
       - name: 5. Archive Production Artifact
@@ -34,10 +38,12 @@ jobs:
           cp package.json artifact/
           cp README.md artifact/
 
+      # ✨ --- 修正點 1 --- ✨
+      # 直接提供一個固定的 artifact 名稱
       - name: 6. Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.build.outputs.artifact_name }}
+          name: build-artifact
           path: artifact/
 
   ##################################################
@@ -48,10 +54,12 @@ jobs:
     runs-on: ubuntu-latest
     environment: staging
     steps:
+      # ✨ --- 修正點 2 --- ✨
+      # 使用與上傳時相同的固定名稱來下載
       - name: 1. Download Build Artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ needs.build.outputs.artifact_name }}
+          name: build-artifact
 
       - name: 2. Create Staging Release
         env:
@@ -69,10 +77,12 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
+      # ✨ --- 修正點 3 --- ✨
+      # 使用與上傳時相同的固定名稱來下載
       - name: 1. Download Build Artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ needs.build.outputs.artifact_name }}
+          name: build-artifact
 
       - name: 2. Create Production Release
         env:
