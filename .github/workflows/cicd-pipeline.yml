@@ -26,19 +26,21 @@ jobs:
       - name: 4. Run Build Script
         run: npm run build
 
-      - name: 5. Archive Production Artifact
+      - name: 5. Archive Production Artifact into a Zip
         run: |
-          mkdir -p artifact
-          cp -r dist artifact/
-          cp action.yml artifact/
-          cp package.json artifact/
-          cp README.md artifact/
+          mkdir -p release_package
+          cp -r dist release_package/
+          cp action.yml release_package/
+          cp package.json release_package/
+          cp README.md release_package/
+          cd release_package
+          zip -r ../release.zip .
 
-      - name: 6. Upload Artifact
+      - name: 6. Upload Zipped Artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-artifact
-          path: artifact/
+          path: release.zip
 
   ##################################################
   # 2. DEPLOY TO STAGING JOB: 部署到 Staging 環境   #
@@ -53,15 +55,13 @@ jobs:
         with:
           name: build-artifact
 
-      # ✨ --- 修正點 1 --- ✨
-      # 在 gh release create 命令中明確指定倉庫
       - name: 2. Create Staging Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ vars.BUILD_TAG }}
           NOTE: ${{ vars.RELEASE_NOTE }}
         run: |
-          gh release create "$TAG" ./* --title "Staging Release: $TAG" --notes "$NOTE" --repo ${{ github.repository }}
+          gh release create "$TAG" release.zip --title "Staging Release: $TAG" --notes "$NOTE" --repo ${{ github.repository }}
 
   ##################################################
   # 3. DEPLOY TO PRODUCTION JOB: 部署到 Production 環境 #
@@ -76,12 +76,10 @@ jobs:
         with:
           name: build-artifact
 
-      # ✨ --- 修正點 2 --- ✨
-      # 在 gh release create 命令中明確指定倉庫
       - name: 2. Create Production Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ vars.BUILD_TAG }}
           NOTE: ${{ vars.RELEASE_NOTE }}
         run: |
-          gh release create "$TAG" ./* --title "Production Release: $TAG" --notes "$NOTE" --repo ${{ github.repository }}
+          gh release create "$TAG" release.zip --title "Production Release: $TAG" --notes "$NOTE" --repo ${{ github.repository }}
