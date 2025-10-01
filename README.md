@@ -19,16 +19,16 @@ A GitHub Action that automatically updates your README file with the latest acti
 ## ✍️ Example
 
 <!--START_SECTION:activity-->
-1. 📝 Committed to [TheDanniCraft/activity-log](https://github.com/TheDanniCraft/activity-log/commit/9884864a8ddba730c3f4f1c535b554c0b62a6fcc)
-2. ➕ Created a new branch [`master`](https://github.com/TheDanniCraft/endpoints/tree/master) in [TheDanniCraft/endpoints](https://github.com/TheDanniCraft/endpoints)
-3. 🎉 Created a new repository [TheDanniCraft/endpoints](https://github.com/TheDanniCraft/endpoints)
-4. 📝 Committed to [TheDanniCraft/activity-log](https://github.com/TheDanniCraft/activity-log/commit/c155d3a96cb0c040922ae4b62fde40d532410dc3)
-5. 🗑️ Deleted a branch `badge` in [TheDanniCraft/activity-log](https://github.com/TheDanniCraft/activity-log)
-6. 📝 Committed to [TheDanniCraft/activity-log](https://github.com/TheDanniCraft/activity-log/commit/10a09001cb1287b9828a1abe601ebb891e35f29a)
-7. 📝 Committed to [TheDanniCraft/activity-log](https://github.com/TheDanniCraft/activity-log/commit/7257dca32b377eb8fe350dbb7742d6bb49bbbf06)
-8. 📝 Committed to [TheDanniCraft/activity-log](https://github.com/TheDanniCraft/activity-log/commit/6e35f5f8b5c5ce42ce280a43180ab3952d33568c)
-9. ➕ Created a new branch [`badge`](https://github.com/TheDanniCraft/activity-log/tree/badge) in [TheDanniCraft/activity-log](https://github.com/TheDanniCraft/activity-log)
-10. 📝 Committed to [TheDanniCraft/activity-log](https://github.com/TheDanniCraft/activity-log/commit/237fb358147c43aca0f6977fc237af026f20453b)
+1. ➕ Created a new branch [`main`](https://github.com/kaigiii/Edu_macth_PRO/tree/main) in [kaigiii/Edu_macth_PRO](https://github.com/kaigiii/Edu_macth_PRO)
+2. 🎉 Created a new repository [kaigiii/Edu_macth_PRO](https://github.com/kaigiii/Edu_macth_PRO)
+3. ❌ Closed an issue [#13](https://github.com/kaigiii/mybowling-app/issues/13) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
+4. 🔀 Merged [PR #14](https://github.com/kaigiii/mybowling-app/pull/14) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
+5. 📥 Opened [PR #14](https://github.com/kaigiii/mybowling-app/pull/14) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
+6. ➕ Created a new branch [`feature/add-readme-validation`](https://github.com/kaigiii/mybowling-app/tree/feature/add-readme-validation) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
+7. 🔄 Reopened an issue [#13](https://github.com/kaigiii/mybowling-app/issues/13) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
+8. ❌ Closed an issue [#13](https://github.com/kaigiii/mybowling-app/issues/13) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
+9. 🔄 Reopened an issue [#13](https://github.com/kaigiii/mybowling-app/issues/13) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
+10. ❌ Closed an issue [#13](https://github.com/kaigiii/mybowling-app/issues/13) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
 <!--END_SECTION:activity-->
 
 ## 📖Usage
