@@ -1,7 +1,17 @@
 name: CI/CD Deployment Pipeline
 
 on:
-  workflow_dispatch: # 允許手動觸發
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version bump type (patch, minor, major)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
 
 jobs:
   ##################################################
@@ -10,18 +20,42 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      new_version: ${{ steps.version.outputs.new_version }}
+      new_version: ${{ steps.version.outputs.new_version }} # ✨ 修改 output，只輸出版本號
     steps:
       - name: 1. Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 需要完整的 git 歷史
+          token: ${{ secrets.GITHUB_TOKEN }} # 需要 token 來推送標籤和變更
 
       - name: 2. Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
+      # ✨ 新增的步驟：自動提升版本並輸出 ✨
+      - name: 2.5. Bump version and create tag
+        id: version
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 提升 npm 版本，此命令會修改 package.json 並自動建立一個 git 標籤
+          npm version ${{ github.event.inputs.version_type }} -m "chore: release v%s"
+          
+          # 將新的標籤和修改後的 package.json 推回倉庫
+          git push --follow-tags
+          
+          # 從新的 package.json 中讀取版本號並設為 output
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+
       - name: 3. Install Dependencies
         run: npm install
+
+      # ✨ 新增的步驟 ✨
+      - name: 3.5. Run Linter for Code Quality Check
+        run: npm run lint
 
       - name: 4. Run Build Script
         run: npm run build
@@ -58,7 +92,8 @@ jobs:
       - name: 2. Create Staging Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ vars.BUILD_TAG }}
+          # ✨ 使用動態版本號，並移除 vars.BUILD_TAG 的依賴 ✨
+          TAG: staging-v${{ needs.build.outputs.new_version }}
           NOTE: ${{ vars.RELEASE_NOTE }}
         run: |
           gh release create "$TAG" release.zip --title "Staging Release: $TAG" --notes "$NOTE" --repo ${{ github.repository }}
@@ -79,7 +114,8 @@ jobs:
       - name: 2. Create Production Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ vars.BUILD_TAG }}
+          # ✨ 使用動態版本號，生產環境通常用 'v' 前綴 ✨
+          TAG: v${{ needs.build.outputs.new_version }}
           NOTE: ${{ vars.RELEASE_NOTE }}
         run: |
           gh release create "$TAG" release.zip --title "Production Release: $TAG" --notes "$NOTE" --repo ${{ github.repository }}
