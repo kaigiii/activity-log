@@ -19,16 +19,16 @@ A GitHub Action that automatically updates your README file with the latest acti
 ## ✍️ Example
 
 <!--START_SECTION:activity-->
-1. 🍴 Forked [TheDanniCraft/activity-log](https://github.com/TheDanniCraft/activity-log)
-2. ➕ Created a new branch [`main`](https://github.com/kaigiii/Edu_macth_PRO/tree/main) in [kaigiii/Edu_macth_PRO](https://github.com/kaigiii/Edu_macth_PRO)
-3. 🎉 Created a new repository [kaigiii/Edu_macth_PRO](https://github.com/kaigiii/Edu_macth_PRO)
-4. ❌ Closed an issue [#13](https://github.com/kaigiii/mybowling-app/issues/13) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
-5. 🔀 Merged [PR #14](https://github.com/kaigiii/mybowling-app/pull/14) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
-6. 📥 Opened [PR #14](https://github.com/kaigiii/mybowling-app/pull/14) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
-7. ➕ Created a new branch [`feature/add-readme-validation`](https://github.com/kaigiii/mybowling-app/tree/feature/add-readme-validation) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
-8. 🔄 Reopened an issue [#13](https://github.com/kaigiii/mybowling-app/issues/13) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
-9. ❌ Closed an issue [#13](https://github.com/kaigiii/mybowling-app/issues/13) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
-10. 🔄 Reopened an issue [#13](https://github.com/kaigiii/mybowling-app/issues/13) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
+1. 🗑️ Deleted a tag `v` in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+2. 🍴 Forked [TheDanniCraft/activity-log](https://github.com/TheDanniCraft/activity-log)
+3. ➕ Created a new branch [`main`](https://github.com/kaigiii/Edu_macth_PRO/tree/main) in [kaigiii/Edu_macth_PRO](https://github.com/kaigiii/Edu_macth_PRO)
+4. 🎉 Created a new repository [kaigiii/Edu_macth_PRO](https://github.com/kaigiii/Edu_macth_PRO)
+5. ❌ Closed an issue [#13](https://github.com/kaigiii/mybowling-app/issues/13) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
+6. 🔀 Merged [PR #14](https://github.com/kaigiii/mybowling-app/pull/14) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
+7. 📥 Opened [PR #14](https://github.com/kaigiii/mybowling-app/pull/14) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
+8. ➕ Created a new branch [`feature/add-readme-validation`](https://github.com/kaigiii/mybowling-app/tree/feature/add-readme-validation) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
+9. 🔄 Reopened an issue [#13](https://github.com/kaigiii/mybowling-app/issues/13) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
+10. ❌ Closed an issue [#13](https://github.com/kaigiii/mybowling-app/issues/13) in [kaigiii/mybowling-app](https://github.com/kaigiii/mybowling-app)
 <!--END_SECTION:activity-->
 
 ## 📖Usage
