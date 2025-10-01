@@ -26,7 +26,7 @@ jobs:
           
           # ✨ --- 唯一的修正點在這裡 --- ✨
           # 將 secrets.TOKEN 改為 secrets.GITHUB_TOKEN
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
           
           EVENT_LIMIT: 10
           OUTPUT_STYLE: MARKDOWN
