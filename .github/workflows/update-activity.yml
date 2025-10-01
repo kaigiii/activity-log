@@ -5,6 +5,9 @@ on:
     - cron: "*/30 * * * *" # Runs every 30 minutes
   workflow_dispatch: # Allows manual triggering
 
+# 註解：permissions 區塊在這裡不是必須的，
+# 因為使用 GITHUB_TOKEN 時，預設就有寫入權限（如果您的倉庫設定允許）。
+# 但保留它也可以，更明確。
 permissions:
   contents: write
 
@@ -13,13 +16,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Run Update GitHub Activity
-        uses: ./
+        # 'uses: ./' 表示在測試時，直接使用當前這個倉庫中的 Action 程式碼
+        uses: ./ 
         with:
-          GITHUB_USERNAME: "thedannicraft"
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          # 建議這裡使用您自己的 GitHub 用戶名來測試
+          GITHUB_USERNAME: "kaigiii" 
+          
+          # ✨ --- 唯一的修正點在這裡 --- ✨
+          # 將 secrets.TOKEN 改為 secrets.GITHUB_TOKEN
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
           EVENT_LIMIT: 10
           OUTPUT_STYLE: MARKDOWN
-          IGNORE_EVENTS: "[]"
+          # 如果沒有要忽略的事件，可以省略此行
+          # IGNORE_EVENTS: "[]"
           README_PATH: README.md
           COMMIT_MESSAGE: "⚡ Update README.md with latest activity"
