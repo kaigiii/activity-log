@@ -112,6 +112,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: staging
     steps:
+      - name: 0. Debug received version
+        run: |
+          echo "Received new_version from build job: '${{ needs.build.outputs.new_version }}'"
+          echo "Constructed TAG will be: 'staging-v${{ needs.build.outputs.new_version }}'"
+          
       - name: 1. Download Build Artifact
         uses: actions/download-artifact@v4
         with:
@@ -134,6 +139,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
+      - name: 0. Debug received version
+        run: |
+          echo "Received new_version from build job: '${{ needs.build.outputs.new_version }}'"
+          echo "Constructed TAG will be: 'v${{ needs.build.outputs.new_version }}'"
+          
       - name: 1. Download Build Artifact
         uses: actions/download-artifact@v4
         with:
