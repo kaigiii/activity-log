@@ -192,9 +192,10 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: 3. Rollback - Delete Failed Releases and Tag
-        if: needs.build.outputs.new_version != ''
+        if: ${{ needs.build.outputs.new_version != '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
         run: |
           echo "Attempting to rollback failed release v${{ needs.build.outputs.new_version }}..."
           gh release delete v${{ needs.build.outputs.new_version }} --yes --repo ${{ github.repository }} || echo "Production release not created or already deleted."
