@@ -26,7 +26,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # ✨ 修正点 1：使用权限更强的 PAT 进行 checkout ✨
+          token: ${{ secrets.ACTION_TOKEN }}
 
       - name: 2. Setup Node.js
         uses: actions/setup-node@v4
@@ -35,11 +36,23 @@ jobs:
 
       - name: 2.5. Bump version and create tag
         id: version
+        # ✨ 修正点 2：在 run 命令中注入 PAT ✨
+        env:
+          # 将 PAT 作为一个环境变量注入到这个步骤中
+          GH_TOKEN: ${{ secrets.ACTION_TOKEN }}
         run: |
+          # 配置 git 使用 PAT 进行 HTTPS 推送
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 执行版本提升
           npm version ${{ github.event.inputs.version_type }} -m "chore: release v%s"
-          git push --follow-tags
+          
+          # ✨ 修正点 3：使用 PAT 推送 ✨
+          # 注意这里的 URL 格式，它将 Token 嵌入其中用于认证
+          git push "https://${GH_TOKEN}@github.com/${{ github.repository }}" --follow-tags
+          
+          # 获取新版本号并输出
           NEW_VERSION=$(node -p "require('./package.json').version")
           echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
 
