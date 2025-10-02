@@ -3,7 +3,7 @@ const eventDescriptions = {
         const commitSha = payload.head;
         return isPrivate
             ? '📝 Committed to a private repo'
-            : `📝 Committed to [${repo.name}](https://github.com/${repo.name}/commit/${commitSha})`
+            : `📝 Committed to [${repo.name}](https://github.com/${repo.name}/commit/${commitSha})`;
     },
 
     'CreateEvent': ({ repo, isPrivate, payload, hideDetailsOnPrivateRepos }) => {
