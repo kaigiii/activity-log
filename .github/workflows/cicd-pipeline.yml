@@ -36,25 +36,47 @@ jobs:
 
       - name: 2.5. Bump version and create tag
         id: version
-        # ✨ 修正点 2：在 run 命令中注入 PAT ✨
         env:
-          # 将 PAT 作为一个环境变量注入到这个步骤中
           GH_TOKEN: ${{ secrets.ACTION_TOKEN }}
         run: |
-          # 配置 git 使用 PAT 进行 HTTPS 推送
+          echo "--- STARTING VERSION BUMP PROCESS ---"
+
+          echo "Configuring git user..."
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # 执行版本提升
-          npm version ${{ github.event.inputs.version_type }} -m "chore: release v%s"
+          echo "Current directory content:"
+          ls -la
+
+          echo "Content of package.json BEFORE bump:"
+          cat package.json
+
+          echo "Attempting to run npm version with --verbose flag..."
+          # ✨ 关键修改 1: 加入 --verbose，让 npm 输出详细的执行过程 ✨
+          npm version ${{ github.event.inputs.version_type }} -m "chore: release v%s" --verbose
           
-          # ✨ 修正点 3：使用 PAT 推送 ✨
-          # 注意这里的 URL 格式，它将 Token 嵌入其中用于认证
+          echo "npm version command finished. Checking git status..."
+          git status
+          git log -1
+
+          echo "Content of package.json AFTER bump:"
+          cat package.json
+
+          echo "Attempting to push changes and tags..."
+          # ✨ 关键修改 2: 在 git push 前加入 set -x 开启调试模式 ✨
+          set -x
           git push "https://${GH_TOKEN}@github.com/${{ github.repository }}" --follow-tags
+          set +x
+          echo "Git push command finished."
           
-          # 获取新版本号并输出
+          echo "Extracting new version..."
           NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "Extracted version is: '${NEW_VERSION}'"
+
+          echo "Setting output..."
           echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+
+          echo "--- FINISHED VERSION BUMP PROCESS ---"
 
       - name: 3. Install Dependencies
         run: npm install
