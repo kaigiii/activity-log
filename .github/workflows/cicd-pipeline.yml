@@ -59,6 +59,7 @@ jobs:
           cp package.json release_package/
           cp README.md release_package/
           cp -r src release_package/
+          cp .eslintrc.json release_package/
           cd release_package
           zip -r ../release.zip .
 
