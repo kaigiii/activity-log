@@ -69,11 +69,11 @@ jobs:
             release.zip
             version.txt
 
+##################################################
+  # 2A. TEST-UNIT JOB: 單元測試 (Linting)          #
   ##################################################
-  # 2. TEST JOB: 執行自動化測試                  #
-  ##################################################
-  test:
-    name: Run Automated Tests
+  test-unit:
+    name: Run Unit Tests (Linting)
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -88,23 +88,63 @@ jobs:
           node-version: '20'
 
       - name: 3. Unzip Artifact
-        run: |
-          unzip release.zip -d ./app
-          # 我們需要安裝 devDependencies 來執行 lint
-          cp package.json ./app/
-          cp package-lock.json ./app/
+        run: unzip release.zip -d ./app
 
+      # ✨ 關鍵修正點 1：直接在 app 目錄中執行 npm install ✨
       - name: 4. Install Dependencies for Testing
         working-directory: ./app
-        run: npm install --only=dev
+        run: npm install # npm install 會自動讀取該目錄下的 package.json
 
-      - name: 5. Run Mock Tests (Linting)
+      # ✨ 關鍵修正點 2：在 app 目錄中執行 npm test ✨
+      - name: 5. Run Mock Tests (Lint)
         working-directory: ./app
-        run: npm test
+        run: npm test # npm test 會執行 lint
+
+      - name: 6. Generate and Upload Lint Report
+        working-directory: ./app
+        run: |
+          # 即使 lint 失敗也要繼續，以便上傳報告
+          npm run lint > lint-report.txt || true
+          
+      - name: 7. Upload Lint Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-report
+          path: ./app/lint-report.txt
+
+      - name: 8. Check Lint Results and Fail Job if Needed
+        working-directory: ./app
+        run: |
+          # 檢查報告檔案是否為空。如果不為空，說明有 lint 錯誤。
+          if [ -s lint-report.txt ]; then
+            echo "❌ Linting failed. See the 'lint-report' artifact for details."
+            cat lint-report.txt
+            exit 1
+          else
+            echo "✅ Linting passed."
+          fi
+
+  ##################################################
+  # 2B. TEST-INTEGRATION JOB: 整合測試 (模擬)     #
+  ##################################################
+  test-integration:
+    name: Run Integration Tests (Mock)
+    needs: test-unit
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: 1. Run Mock Integration Test
+        env:
+          TEST_ENV: ${{ vars.TEST_ENV || 'staging' }}
+        run: |
+          echo "Running integration tests on environment: $TEST_ENV..."
+          # 這裡可以是一個真實的測試腳本，我們先用 echo 模擬
+          echo "✅ Mock integration tests passed!"
+          exit 0
         
 
   release:
-    needs: test
+    needs: test-unit
     runs-on: ubuntu-latest
     environment: dev
     steps:
