@@ -58,6 +58,7 @@ jobs:
           cp action.yml release_package/
           cp package.json release_package/
           cp README.md release_package/
+          cp -r src release_package/
           cd release_package
           zip -r ../release.zip .
 
