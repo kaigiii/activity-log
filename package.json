@@ -7,6 +7,7 @@
 	"scripts": {
 		"build": "ncc build src/index.js --license licenses.txt",
 		"lint": "eslint src/**/*.js",
+		"test": "npm run lint",
 		"start": "node src/index.js"
 	},
 	"devDependencies": {
