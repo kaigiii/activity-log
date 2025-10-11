@@ -206,39 +206,49 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   notify-failure:
+    name: Send Failure Notification & Rollback
     needs: [build, test-unit, test-integration, deploy-staging, deploy-production]
     if: failure()
     runs-on: ubuntu-latest
     steps:
-      - name: 1. Download Artifact (to get version)
+      - name: 1. Download All Artifacts (to get version and reports)
         uses: actions/download-artifact@v4
-        with:
-          name: build-artifact
-        continue-on-error: true
+        continue-on-error: true # 放在這裡，與 name, uses 同級
 
       - name: 2. Checkout Repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.ACTION_TOKEN }}
 
-  #     - name: 3. Send Failure Notification to Slack
-  #       uses: slackapi/slack-github-action@v1.24.0
-  #       with:
-  #         payload: |
-  #           { "text": "❌ Deployment Failed! Repository: `${{ github.repository }}`", "blocks": [ { "type": "header", "text": { "type": "plain_text", "text": "❌ Deployment Failed!" } }, { "type": "section", "fields": [ { "type": "mrkdwn", "text": "*Repository:*\n<https://github.com/${{ github.repository }}|${{ github.repository }}>" }, { "type": "mrkdwn", "text": "*Workflow Run:*\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Click to view logs>" } ] } ] }
-  #       env:
-  #         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: 3. Send Failure Notification to Slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            { "text": "❌ Deployment Failed! Repository: `${{ github.repository }}`", "blocks": [ { "type": "header", "text": { "type": "plain_text", "text": "❌ Deployment Failed!" } }, { "type": "section", "fields": [ { "type": "mrkdwn", "text": "*Repository:*\n<https://github.com/${{ github.repository }}|${{ github.repository }}>" }, { "type": "mrkdwn", "text": "*Workflow Run:*\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Click to view logs>" } ] } ] }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  #     - name: 4. Rollback - Delete Failed Releases and Tag
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       run: |
-  #         if [ -f version.txt ]; then
-  #           VERSION=$(cat version.txt)
-  #           echo "Attempting to rollback failed release v$VERSION..."
-  #           gh release delete v$VERSION --yes --repo ${{ github.repository }} || echo "Production release not created or already deleted."
-  #           gh release delete staging-v$VERSION --yes --repo ${{ github.repository }} || echo "Staging release not created or already deleted."
-  #           git push --delete origin v$VERSION || echo "Remote tag not found or already deleted."
-  #         else
-  #           echo "version.txt not found, skipping rollback."
-  #         fi
+      - name: 4. Rollback - Delete Failed Releases and Tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -f build-artifact/version.txt ]; then
+            VERSION=$(cat build-artifact/version.txt)
+            echo "Attempting to rollback failed release v$VERSION..."
+            gh release delete v$VERSION --yes --repo ${{ github.repository }} || echo "Production release not created or already deleted."
+            gh release delete staging-v$VERSION --yes --repo ${{ github.repository }} || echo "Staging release not created or already deleted."
+            git push --delete origin v$VERSION || echo "Remote tag not found or already deleted."
+          else
+            echo "version.txt not found, skipping rollback."
+          fi
+
+      - name: 5. Create GitHub Issue on Failure
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
+        run: |
+          LINT_REPORT_CONTENT=$(cat lint-report/lint-report.txt || echo "Lint report not available.")
+          
+          gh issue create \
+            --title "CI/CD Pipeline Failure: Run #${{ github.run_number }}" \
+            --body "The CI/CD pipeline failed. Please investigate. [View Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\n\n**Lint Report:**\n\`\`\`\n${LINT_REPORT_CONTENT}\n\`\`\`" \
+            --repo ${{ github.repository }}
