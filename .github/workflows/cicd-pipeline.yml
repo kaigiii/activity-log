@@ -148,10 +148,10 @@ jobs:
           exit 0
         
 
-  release:
-    needs: test-unit
+  deploy-staging:
+    needs: test-integration
     runs-on: ubuntu-latest
-    environment: dev
+    environment: staging
     steps:
       - name: 1. Download Artifact
         uses: actions/download-artifact@v4
@@ -165,61 +165,61 @@ jobs:
           NOTE: ${{ vars.RELEASE_NOTE }}
         run: |
           VERSION=$(cat version.txt)
-          TAG="dev-v$VERSION"
+          TAG="staging-v$VERSION"
           echo "Creating release with tag: $TAG"
           gh release create "$TAG" release.zip --title "Staging Release: $TAG" --notes "$NOTE" --repo ${{ github.repository }}
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
-  # deploy-production:
-  #   needs: deploy-staging
-  #   runs-on: ubuntu-latest
-  #   environment: production
-  #   steps:
-  #     - name: 1. Download Artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: build-artifact
+  deploy-production:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: 1. Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifact
 
-  #     - name: 2. Create Production Release
-  #       id: create_release
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         NOTE: ${{ vars.RELEASE_NOTE }}
-  #       run: |
-  #         VERSION=$(cat version.txt)
-  #         TAG="v$VERSION"
-  #         echo "Creating release with tag: $TAG"
-  #         gh release create "$TAG" release.zip --title "Production Release: $TAG" --notes "$NOTE" --repo ${{ github.repository }}
-  #         echo "version=${VERSION}" >> $GITHUB_OUTPUT
+      - name: 2. Create Production Release
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NOTE: ${{ vars.RELEASE_NOTE }}
+        run: |
+          VERSION=$(cat version.txt)
+          TAG="v$VERSION"
+          echo "Creating release with tag: $TAG"
+          gh release create "$TAG" release.zip --title "Production Release: $TAG" --notes "$NOTE" --repo ${{ github.repository }}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
-  # notify-success:
-  #   needs: [deploy-production]
-  #   if: success()
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Send Success Notification to Slack
-  #       uses: slackapi/slack-github-action@v1.24.0
-  #       with:
-  #         payload: |
-  #           { "text": "✅ Deployment Successful! Repository: `${{ github.repository }}`, Version: `v${{ needs.deploy-production.outputs.version }}`", "blocks": [ { "type": "header", "text": { "type": "plain_text", "text": "✅ Deployment Successful!" } }, { "type": "section", "fields": [ { "type": "mrkdwn", "text": "*Repository:*\n<https://github.com/${{ github.repository }}|${{ github.repository }}>" }, { "type": "mrkdwn", "text": "*Version:*\n`v${{ needs.deploy-production.outputs.version }}`" } ] }, { "type": "actions", "elements": [ { "type": "button", "text": { "type": "plain_text", "text": "View Release" }, "url": "https://github.com/${{ github.repository }}/releases/tag/v${{ needs.deploy-production.outputs.version }}" } ] } ] }
-  #       env:
-  #         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  notify-success:
+    needs: [deploy-production]
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Success Notification to Slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            { "text": "✅ Deployment Successful! Repository: `${{ github.repository }}`, Version: `v${{ needs.deploy-production.outputs.version }}`", "blocks": [ { "type": "header", "text": { "type": "plain_text", "text": "✅ Deployment Successful!" } }, { "type": "section", "fields": [ { "type": "mrkdwn", "text": "*Repository:*\n<https://github.com/${{ github.repository }}|${{ github.repository }}>" }, { "type": "mrkdwn", "text": "*Version:*\n`v${{ needs.deploy-production.outputs.version }}`" } ] }, { "type": "actions", "elements": [ { "type": "button", "text": { "type": "plain_text", "text": "View Release" }, "url": "https://github.com/${{ github.repository }}/releases/tag/v${{ needs.deploy-production.outputs.version }}" } ] } ] }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  # notify-failure:
-  #   needs: [build, deploy-staging, deploy-production]
-  #   if: failure()
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: 1. Download Artifact (to get version)
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: build-artifact
-  #       continue-on-error: true
+  notify-failure:
+    needs: [build, test-unit, test-integration, deploy-staging, deploy-production]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. Download Artifact (to get version)
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifact
+        continue-on-error: true
 
-  #     - name: 2. Checkout Repository
-  #       uses: actions/checkout@v4
-  #       with:
-  #         token: ${{ secrets.ACTION_TOKEN }}
+      - name: 2. Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ACTION_TOKEN }}
 
   #     - name: 3. Send Failure Notification to Slack
   #       uses: slackapi/slack-github-action@v1.24.0
