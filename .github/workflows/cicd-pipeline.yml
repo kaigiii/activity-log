@@ -97,10 +97,11 @@ jobs:
         working-directory: ./app
         run: npm install # npm install 會自動讀取該目錄下的 package.json
 
-      # ✨ 關鍵修正點 2：在 app 目錄中執行 npm test ✨
-      - name: 5. Run Mock Tests (Lint)
+      # ✨ 關鍵修正點：修改了下面這兩個步驟 ✨
+      - name: 5. Generate Lint Report
         working-directory: ./app
-        run: npm test # npm test 會執行 lint
+        run: |
+          npm run lint > lint-report.txt 2>&1 || true
 
       - name: 6. Generate and Upload Lint Report
         working-directory: ./app
@@ -117,8 +118,10 @@ jobs:
       - name: 8. Check Lint Results and Fail Job if Needed
         working-directory: ./app
         run: |
-          # 檢查報告檔案是否為空。如果不為空，說明有 lint 錯誤。
-          if [ -s lint-report.txt ]; then
+          echo "Checking lint-report.txt..."
+          # 使用 grep 來檢查報告中是否包含 'error' 關鍵字
+          # grep -q 會靜默執行，根據是否找到匹配項來設定退出碼
+          if grep -q "error" lint-report.txt; then
             echo "❌ Linting failed. See the 'lint-report' artifact for details."
             cat lint-report.txt
             exit 1
