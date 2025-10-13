@@ -21,16 +21,16 @@ A GitHub Action that automatically updates your README file with the latest acti
 ## ✍️ Example
 
 <!--START_SECTION:activity-->
-1. ➕ Created a new tag [`v1.0.20`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.20) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
-2. ➕ Created a new tag [`v1.0.19`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.19) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
-3. ➕ Created a new tag [`v1.0.18`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.18) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
-4. ➕ Created a new tag [`v1.0.17`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.17) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
-5. ➕ Created a new tag [`v1.0.16`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.16) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
-6. ➕ Created a new tag [`v1.0.15`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.15) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
-7. ➕ Created a new tag [`v1.0.14`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.14) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
-8. ➕ Created a new tag [`v1.0.13`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.13) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
-9. ➕ Created a new tag [`v1.0.12`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.12) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
-10. ➕ Created a new tag [`v1.0.11`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.11) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+1. 🆕 Opened an issue [#1](https://github.com/kaigiii/activity-log/issues/1) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+2. ➕ Created a new tag [`v1.0.24`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.24) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+3. ➕ Created a new tag [`v1.0.23`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.23) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+4. ➕ Created a new tag [`v1.0.22`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.22) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+5. ➕ Created a new tag [`v1.0.21`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.21) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+6. ➕ Created a new tag [`v1.0.20`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.20) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+7. ➕ Created a new tag [`v1.0.19`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.19) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+8. ➕ Created a new tag [`v1.0.18`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.18) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+9. ➕ Created a new tag [`v1.0.17`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.17) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+10. ➕ Created a new tag [`v1.0.16`](https://github.com/kaigiii/activity-log/releases/tag/v1.0.16) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
 <!--END_SECTION:activity-->
 
 ## 📖Usage
