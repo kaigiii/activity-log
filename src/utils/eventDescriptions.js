@@ -245,4 +245,32 @@ const eventDescriptions = {
     },
 };
 
-module.exports = eventDescriptions;
+function getEventDescription(event) {
+    if (!event || !event.type) {
+        return null;
+    }
+
+    const handler = eventDescriptions[event.type];
+
+    if (!handler) {
+        return null;
+    }
+
+    if (typeof handler === 'function') {
+        return handler(event);
+    }
+
+    if (typeof handler === 'object' && event.payload && event.payload.action) {
+        const actionHandler = handler[event.payload.action];
+        if (typeof actionHandler === 'function') {
+            return actionHandler(event);
+        }
+    }
+
+    return null;
+}
+
+module.exports = {
+    eventDescriptions,
+    getEventDescription,
+};
