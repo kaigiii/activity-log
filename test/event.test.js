@@ -5,32 +5,47 @@ const { getEventDescription } = require('../src/utils/eventDescriptions.js');
 console.log('--- Running Basic Unit Tests ---');
 
 try {
-    const pushEvent = { type: 'PushEvent', payload: { ref: 'refs/heads/main' } };
-    const description = getEventDescription(pushEvent, 'kaigiii');
-    assert.strictEqual(description, 'Pushed to `main` at', 'Test Failed: PushEvent description is incorrect.');
-    console.log('✅ PushEvent test passed!');
+    const event = {
+        type: 'PushEvent',
+        repo: { name: 'kaigiii/activity-log' },
+        payload: { head: 'abcdef123' },
+        isPrivate: false
+    };
+    const description = getEventDescription(event);
+    const expected = '📝 Committed to [kaigiii/activity-log](https://github.com/kaigiii/activity-log/commit/abcdef123)';
+    assert.strictEqual(description, expected, 'Test Failed: PushEvent description is incorrect.');
+    console.log('✅ Public PushEvent test passed!');
 } catch (error) {
-    console.error('❌ PushEvent test failed:', error.message);
+    console.error('❌ Public PushEvent test failed:', error.message);
     process.exit(1);
 }
 
 try {
-    const issuesEvent = { type: 'IssuesEvent', payload: { action: 'opened' } };
-    const description = getEventDescription(issuesEvent, 'kaigiii');
-    assert.strictEqual(description, 'Opened an issue in', 'Test Failed: IssuesEvent description is incorrect.');
-    console.log('✅ IssuesEvent test passed!');
+    const event = {
+        type: 'IssuesEvent',
+        repo: { name: 'kaigiii/activity-log' },
+        payload: { action: 'opened', issue: { number: 42 } },
+        isPrivate: false
+    };
+    const description = getEventDescription(event);
+    const expected = '🆕 Opened an issue [#42](https://github.com/kaigiii/activity-log/issues/42) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)';
+    assert.strictEqual(description, expected, 'Test Failed: IssuesEvent description is incorrect.');
+    console.log('✅ Public IssuesEvent test passed!');
 } catch (error) {
-    console.error('❌ IssuesEvent test failed:', error.message);
+    console.error('❌ Public IssuesEvent test failed:', error.message);
     process.exit(1);
 }
 
 try {
-    const unknownEvent = { type: 'UnknownEvent' };
-    const description = getEventDescription(unknownEvent, 'kaigiii');
-    assert.strictEqual(description, null, 'Test Failed: UnknownEvent should return null.');
-    console.log('✅ UnknownEvent test passed!');
+    const event = {
+        type: 'StarEvent',
+        isPrivate: true
+    };
+    const description = getEventDescription(event);
+    assert.strictEqual(description, '⭐ Starred a private repo', 'Test Failed: Private StarEvent should return generic message.');
+    console.log('✅ Private StarEvent test passed!');
 } catch (error) {
-    console.error('❌ UnknownEvent test failed:', error.message);
+    console.error('❌ Private StarEvent test failed:', error.message);
     process.exit(1);
 }
 
