@@ -76,7 +76,7 @@ jobs:
   # 2A. TEST-UNIT JOB: 單元測試 (Linting)          #
   ##################################################
   test-unit:
-    name: Run Unit Tests (Linting)
+    name: Run Unit Tests
     needs: build
     runs-on: ubuntu-latest
     steps:
