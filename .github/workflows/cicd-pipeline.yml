@@ -194,9 +194,7 @@ jobs:
       - name: Send Success Notification to Slack
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          payload: |
-            # 設計一個包含動態資訊的 Slack 訊息。
-            { "text": "✅ Deployment Successful! Repository: `${{ github.repository }}`" }
+          payload: '{ "text": "✅ Deployment Successful! Repository: `${{ github.repository }}`" }'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
