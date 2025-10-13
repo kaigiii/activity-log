@@ -235,9 +235,7 @@ jobs:
       - name: 3. Send Failure Notification to Slack
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          payload: |
-            # 設計一個包含 workflow run 連結的失敗通知。
-            { "text": "❌ Deployment Failed! Repository: `${{ github.repository }}`" }
+          payload: '{ "text": "❌ Deployment Failed! Repository: `${{ github.repository }}`" }'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
