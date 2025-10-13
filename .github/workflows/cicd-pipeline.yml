@@ -73,6 +73,7 @@ jobs:
           cp package.json release_package/
           cp README.md release_package/
           cp .eslintrc.json release_package/
+          cp version.txt release_package/
           
           # 將整個臨時目錄打包成一個 zip 檔。
           cd release_package
