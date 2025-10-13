@@ -110,9 +110,28 @@ jobs:
         working-directory: ./app # 指定在解壓縮後的 'app' 目錄中執行。
         run: npm install --production # 只需要安裝 production 依賴，因為測試腳本沒有 dev 依賴。
 
-      - name: 5. Run Unit Tests # 步驟 5: 執行我們編寫的真實單元測試
+      - name: 5. Run Unit Tests and Generate Report
         working-directory: ./app
-        run: npm test # 執行 package.json 中定義的 "test" 腳本。
+        run: |
+
+          npm test > test-report.txt 2>&1 || true
+          
+      - name: 6. Upload Test Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: ./app/test-report.txt
+
+      - name: 7. Check Test Results and Fail Job if Needed
+        working-directory: ./app
+        run: |
+          if grep -q "❌" test-report.txt; then
+            echo "❌ Unit tests failed. See the 'test-report' artifact for details."
+            cat test-report.txt
+            exit 1
+          else
+            echo "✅ Unit tests passed."
+          fi
 
   ##################################################
   # 2B. TEST-INTEGRATION JOB: 整合測試 (模擬)     #
