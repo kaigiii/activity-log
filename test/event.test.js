@@ -25,7 +25,7 @@ try {
     const description = getEventDescription(event);
 
     // 步驟 3: 斷言 (Assert) - 檢查函式的回傳值是否與我們預期的完全相等。
-    const expected = '📝 Committed to [kaigiii/activity-log](https://github.com/kaigiii/activity-log/commit/abcdef123)';
+    const expected = '📝 Committed to [kaigiii/activity-log](https://github.com/kaigiii/activity-log/commit/abcdef123) THIS IS A BUG!!!';
     assert.strictEqual(description, expected, '測試失敗：PushEvent 的描述文字不正確。');
     
     // 如果 assert.strictEqual 沒有拋出錯誤，代表測試通過。
