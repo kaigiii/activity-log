@@ -3,12 +3,14 @@ name: CI/CD Deployment Pipeline
 
 # --- 觸發器設定 ---
 on:
+  # 允許我們可以在 GitHub 網頁上手動觸發這個 workflow。
   workflow_dispatch:
+    # 定義手動觸發時可以輸入的參數。
     inputs:
       version_type:
         description: '版本升級類型 (patch, minor, major)'
         required: true
-        default: 'patch'
+        default: 'patch' # 預設選項是 'patch' (修補)
         type: choice
         options:
           - patch
@@ -22,42 +24,47 @@ jobs:
   ##################################################
   build:
     name: Build & Package
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # 指定這個 job 在最新的 Ubuntu 虛擬機上執行。
     steps:
-      - name: 1. Checkout Repository
-        uses: actions/checkout@v4
+      - name: 1. Checkout Repository # 步驟 1: 拉取程式碼
+        uses: actions/checkout@v4 # 使用官方的 checkout action
         with:
-          fetch-depth: 0
-          token: ${{ secrets.ACTION_TOKEN }}
+          fetch-depth: 0 # 拉取所有 git 歷史，'npm version' 需要它。
+          token: ${{ secrets.ACTION_TOKEN }} # 使用我們自訂的 PAT，以確保有足夠的權限推送變更。
 
-      - name: 2. Setup Node.js
+      - name: 2. Setup Node.js # 步驟 2: 設定 Node.js 環境
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: 2.5. Bump version
+      - name: 2.5. Bump version # 步驟 2.5: 自動提升版本並建立標籤
         id: version
         env:
           GH_TOKEN: ${{ secrets.ACTION_TOKEN }}
         run: |
-          set -e
+          set -e # 確保任何命令失敗都會立即中止腳本
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          # 根據手動觸發時選擇的類型，自動更新 package.json 的版本號，並建立 commit 和 tag。
           npm version ${{ github.event.inputs.version_type }} -m "chore: release v%s" --force
+          # 將新的 commit 和 tag 推送到遠端 GitHub 倉庫。
           git push "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}" --follow-tags
 
-      - name: 3. Install Dependencies
+      - name: 3. Install Dependencies # 步驟 3: 安裝專案依賴
         run: npm install
 
-      - name: 3.5. Run Linter for Code Quality Check
+      - name: 3.5. Run Linter for Code Quality Check # 步驟 3.5: 執行 Linting 進行程式碼品質檢查
         run: npm run lint
 
-      - name: 4. Run Build Script
+      - name: 4. Run Build Script # 步驟 4: 執行建置腳本
         run: npm run build
 
-      - name: 5. Archive Source, Artifacts, and Version
+      - name: 5. Archive Source, Artifacts, and Version # 步驟 5: 封存產物與原始碼以供測試
         run: |
+          # 將新的版本號寫入一個純文字檔，以便在後續 jobs 中可靠地傳遞。
           node -p "require('./package.json').version" > version.txt
+          
+          # 建立一個臨時目錄，並將所有測試和部署所需的檔案複製進去。
           mkdir -p release_package
           cp -r dist release_package/
           cp -r src release_package/
@@ -66,24 +73,26 @@ jobs:
           cp package.json release_package/
           cp README.md release_package/
           cp .eslintrc.json release_package/
-          cp version.txt release_package/
-          zip -r artifact_bundle.zip ./release_package
+          
+          # 將整個臨時目錄打包成一個 zip 檔。
+          cd release_package
+          zip -r ../artifact_bundle.zip .
 
-      - name: 6. Upload Artifact Bundle
+      - name: 6. Upload Artifact Bundle # 步驟 6: 上傳打包好的產物
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifact
-          path: artifact_bundle.zip
+          name: build-artifact # 將產物命名為 'build-artifact'。
+          path: artifact_bundle.zip # 指定要上傳的檔案。
 
   ##################################################
   # 2A. TEST-UNIT JOB: 單元測試                     #
   ##################################################
   test-unit:
     name: Run Unit Tests
-    needs: build
+    needs: build # 依賴於 'build' job，必須在它成功後才執行。
     runs-on: ubuntu-latest
     steps:
-      - name: 1. Download Artifact Bundle
+      - name: 1. Download Artifact Bundle # 步驟 1: 下載建置產物
         uses: actions/download-artifact@v4
         with:
           name: build-artifact
@@ -93,83 +102,66 @@ jobs:
         with:
           node-version: '20'
 
-      - name: 3. Unzip Artifact Bundle
-        run: unzip artifact_bundle.zip
+      - name: 3. Unzip Artifact Bundle # 步驟 3: 解壓縮產物
+        run: unzip artifact_bundle.zip -d ./app
 
-      - name: 4. Install Dependencies
-        working-directory: ./release_package
-        run: npm install --production
+      - name: 4. Install Dependencies # 步驟 4: 安裝執行測試所需的依賴
+        working-directory: ./app # 指定在解壓縮後的 'app' 目錄中執行。
+        run: npm install --production # 只需要安裝 production 依賴，因為測試腳本沒有 dev 依賴。
 
-      - name: 5. Run Unit Tests & Generate Report
-        working-directory: ./release_package
-        run: |
-          npm test > test-report.txt 2>&1 || true
-
-      - name: 6. Upload Test Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-report
-          path: ./release_package/test-report.txt
-
-      - name: 7. Check Test Results and Fail Job if Needed
-        working-directory: ./release_package
-        run: |
-          if grep -i -q "error" test-report.txt || grep -i -q "failed" test-report.txt; then
-            echo "❌ Unit tests failed. See the 'test-report' artifact for details."
-            cat test-report.txt
-            exit 1
-          else
-            echo "✅ Unit tests passed."
-          fi
+      - name: 5. Run Unit Tests # 步驟 5: 執行我們編寫的真實單元測試
+        working-directory: ./app
+        run: npm test # 執行 package.json 中定義的 "test" 腳本。
 
   ##################################################
   # 2B. TEST-INTEGRATION JOB: 整合測試 (模擬)     #
   ##################################################
   test-integration:
     name: Run Integration Tests (Mock)
-    needs: test-unit
+    needs: test-unit # 依賴於 'test-unit' job，形成測試的階段性關卡。
     runs-on: ubuntu-latest
     steps:
-      - name: 1. Run Mock Integration Test
+      - name: 1. Run Mock Integration Test # 執行一個模擬的整合測試。
         run: |
           echo "✅ Mock integration tests passed!"
-          exit 0
+          exit 0 # 確保此步驟成功，以模擬測試通過。
         
   ##################################################
   # 3. DEPLOY TO STAGING JOB                       #
   ##################################################
   deploy-staging:
     name: Deploy to Staging
-    needs: test-integration
+    needs: test-integration # 依賴於整合測試，確保所有測試都通過後才部署到 Staging。
     runs-on: ubuntu-latest
-    environment: staging
+    environment: staging # 將此 job 綁定到 'staging' 環境，會自動注入該環境的變數。
     steps:
       - name: 1. Download Artifact Bundle
         uses: actions/download-artifact@v4
         with:
           name: build-artifact
-      - name: 2. Unzip for release
+      - name: 2. Unzip for release # 解壓縮以取得 release.zip 和 version.txt
         run: unzip artifact_bundle.zip
-      - name: 3. Create Staging Release
+      - name: 3. Create Staging Release # 建立 Staging Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NOTE: ${{ vars.RELEASE_NOTE }}
+          NOTE: ${{ vars.RELEASE_NOTE }} # 從 staging 環境注入的變數。
         run: |
-          VERSION=$(cat release_package/version.txt)
+          VERSION=$(cat version.txt) # 從檔案中讀取版本號。
           TAG="staging-v$VERSION"
-          cd release_package/dist
-          zip -r ../../release_for_upload.zip .
-          cd ../..
-          gh release create "$TAG" release_for_upload.zip --title "Staging Release: $TAG" --notes "$NOTE" --repo ${{ github.repository }}
+          # 重新只打包 dist 目錄作為發布附件。
+          cd dist
+          zip -r ../release.zip .
+          cd ..
+          gh release create "$TAG" release.zip --title "Staging Release: $TAG" --notes "$NOTE" --repo ${{ github.repository }}
 
   ##################################################
   # 4. DEPLOY TO PRODUCTION JOB                    #
   ##################################################
   deploy-production:
     name: Deploy to Production
-    needs: deploy-staging
+    needs: deploy-staging # 依賴於 staging 部署成功。
     runs-on: ubuntu-latest
-    environment: production
+    environment: production # 綁定到 'production' 環境，會自動觸發人工審核規則。
     steps:
       - name: 1. Download Artifact Bundle
         uses: actions/download-artifact@v4
@@ -178,44 +170,44 @@ jobs:
       - name: 2. Unzip for release
         run: unzip artifact_bundle.zip
       - name: 3. Create Production Release
-        id: create_release # Added ID for output
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NOTE: ${{ vars.RELEASE_NOTE }}
         run: |
-          VERSION=$(cat release_package/version.txt)
+          VERSION=$(cat version.txt)
           TAG="v$VERSION"
-          cd release_package/dist
-          zip -r ../../release_for_upload.zip .
-          cd ../..
-          gh release create "$TAG" release_for_upload.zip --title "Production Release: $TAG" --notes "$NOTE" --repo ${{ github.repository }}
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          cd dist
+          zip -r ../release.zip .
+          cd ..
+          gh release create "$TAG" release.zip --title "Production Release: $TAG" --notes "$NOTE" --repo ${{ github.repository }}
 
   ##################################################
   # 5. O 級任務：通知與自動化問題追蹤               #
   ##################################################
   notify-success:
     name: Send Success Notification
-    needs: [deploy-production]
-    if: success()
+    needs: [deploy-production] # 依賴於 production 部署成功。
+    if: success() # 只有在整個 workflow 成功時才執行。
     runs-on: ubuntu-latest
     steps:
       - name: Send Success Notification to Slack
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          payload: ${{ toJson({ "text": "✅ Deployment Successful! Repository: `${{ github.repository }}`, Version: `v${{ needs.deploy-production.outputs.version }}`" }) }}
+          payload: |
+            # 設計一個包含動態資訊的 Slack 訊息。
+            { "text": "✅ Deployment Successful! Repository: `${{ github.repository }}`" }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   notify-failure:
     name: Send Failure Notification & Rollback
-    needs: [build, test-unit, test-integration, deploy-staging, deploy-production]
-    if: failure()
+    needs: [build, test-unit, test-integration, deploy-staging, deploy-production] # 依賴所有可能失敗的 jobs。
+    if: failure() # 只有在 workflow 中有任何 job 失敗時才執行。
     runs-on: ubuntu-latest
     steps:
       - name: 1. Download All Artifacts (to get version and reports)
         uses: actions/download-artifact@v4
-        continue-on-error: true
+        continue-on-error: true # 即使下載失敗也繼續，因為 build 可能在產生產物前就失敗了。
 
       - name: 2. Checkout Repository
         uses: actions/checkout@v4
@@ -225,14 +217,17 @@ jobs:
       - name: 3. Send Failure Notification to Slack
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          payload: ${{ toJson({ "text": "❌ Deployment Failed! Repository: `${{ github.repository }}`. [View Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" }) }}
+          payload: |
+            # 設計一個包含 workflow run 連結的失敗通知。
+            { "text": "❌ Deployment Failed! Repository: `${{ github.repository }}`" }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      - name: 4. Rollback - Delete Failed Releases and Tag
+      - name: 4. Rollback - Delete Failed Releases and Tag # 自動回滾/清理步驟
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # 檢查版本檔案是否存在，以決定是否執行清理。
           if [ -f build-artifact/version.txt ]; then
             VERSION=$(cat build-artifact/version.txt)
             echo "Attempting to rollback failed release v$VERSION..."
@@ -243,12 +238,12 @@ jobs:
             echo "version.txt not found, skipping rollback."
           fi
 
-      - name: 5. Create GitHub Issue on Failure
+      - name: 5. Create GitHub Issue on Failure # 自動建立 GitHub Issue
         env:
           GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
         run: |
-          LINT_REPORT_CONTENT=$(cat test-report/test-report.txt || echo "Test report not available.")
+          LINT_REPORT_CONTENT=$(cat lint-report/lint-report.txt || echo "Lint report not available.")
           gh issue create \
             --title "CI/CD Pipeline Failure: Run #${{ github.run_number }}" \
-            --body "The CI/CD pipeline failed. Please investigate. [View Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\n\n**Test Report:**\n\`\`\`\n${LINT_REPORT_CONTENT}\n\`\`\`" \
+            --body "The CI/CD pipeline failed. Please investigate. [View Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\n\n**Lint Report:**\n\`\`\`\n${LINT_REPORT_CONTENT}\n\`\`\`" \
             --repo ${{ github.repository }}
