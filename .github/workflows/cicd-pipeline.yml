@@ -57,6 +57,7 @@ jobs:
           cp -r dist release_package/
           cp action.yml release_package/
           cp package.json release_package/
+          cp -r test release_package/
           cp README.md release_package/
           cp -r src release_package/
           cp .eslintrc.json release_package/
@@ -92,16 +93,13 @@ jobs:
       - name: 3. Unzip Artifact
         run: unzip release.zip -d ./app
 
-      # ✨ 關鍵修正點 1：直接在 app 目錄中執行 npm install ✨
-      - name: 4. Install Dependencies for Testing
+      - name: 4. Install Dependencies
         working-directory: ./app
-        run: npm install # npm install 會自動讀取該目錄下的 package.json
+        run: npm install --production
 
-      # ✨ 關鍵修正點：修改了下面這兩個步驟 ✨
-      - name: 5. Generate Lint Report
+      - name: 5. Run Unit Tests
         working-directory: ./app
-        run: |
-          npm run lint > lint-report.txt 2>&1 || true
+        run: npm test
 
       - name: 6. Generate and Upload Lint Report
         working-directory: ./app
