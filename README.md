@@ -21,16 +21,16 @@ A GitHub Action that automatically updates your README file with the latest acti
 ## ✍️ Example
 
 <!--START_SECTION:activity-->
-1. 🌍 Made repository [kaigiii/flask_blog](https://github.com/kaigiii/flask_blog) public
-2. ➕ Created a new branch [`main`](https://github.com/kaigiii/flask_blog/tree/main) in [kaigiii/flask_blog](https://github.com/kaigiii/flask_blog)
-3. 🆕 Opened an issue [#2](https://github.com/kaigiii/activity-log/issues/2) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
-4. 🆕 Opened an issue [#1](https://github.com/kaigiii/activity-log/issues/1) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
-5. 🗑️ Deleted a tag `v` in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
-6. 🗑️ Deleted a tag `v1.0.2` in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
-7. 🗑️ Deleted a tag `v1.0.0` in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
-8. 🗑️ Deleted a tag `v` in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
-9. 🗑️ Deleted a tag `v0.0.22` in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
-10. 🗑️ Deleted a tag `v` in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+1. ➕ Created a new branch [`main`](https://github.com/kaigiii/edu-match-pro-frontend/tree/main) in [kaigiii/edu-match-pro-frontend](https://github.com/kaigiii/edu-match-pro-frontend)
+2. 🌍 Made repository [kaigiii/flask_blog](https://github.com/kaigiii/flask_blog) public
+3. ➕ Created a new branch [`main`](https://github.com/kaigiii/flask_blog/tree/main) in [kaigiii/flask_blog](https://github.com/kaigiii/flask_blog)
+4. 🆕 Opened an issue [#2](https://github.com/kaigiii/activity-log/issues/2) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+5. 🆕 Opened an issue [#1](https://github.com/kaigiii/activity-log/issues/1) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+6. 🗑️ Deleted a tag `v` in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+7. 🗑️ Deleted a tag `v1.0.2` in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+8. 🗑️ Deleted a tag `v1.0.0` in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+9. 🗑️ Deleted a tag `v` in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+10. 🗑️ Deleted a tag `v0.0.22` in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
 <!--END_SECTION:activity-->
 
 ## 📖Usage
