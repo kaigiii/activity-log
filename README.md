@@ -22,15 +22,15 @@ A GitHub Action that automatically updates your README file with the latest acti
 
 <!--START_SECTION:activity-->
 1. 📥 Opened a PR in a private repo
-2. ➕ Created a new branch `feature/pm-ff` in a private repo
+2. ➕ Created a new branch `feature/c-e2` in a private repo
 3. 📥 Opened a PR in a private repo
-4. ➕ Created a new branch `feature/c-e1` in a private repo
-5. undefined
-6. ➕ Created a new branch `main` in a private repo
-7. 🌍 Made repository [kaigiii/flask_blog](https://github.com/kaigiii/flask_blog) public
-8. ➕ Created a new branch [`main`](https://github.com/kaigiii/flask_blog/tree/main) in [kaigiii/flask_blog](https://github.com/kaigiii/flask_blog)
-9. 🆕 Opened an issue [#2](https://github.com/kaigiii/activity-log/issues/2) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
-10. 🆕 Opened an issue [#1](https://github.com/kaigiii/activity-log/issues/1) in [kaigiii/activity-log](https://github.com/kaigiii/activity-log)
+4. ➕ Created a new branch `feature/pm-ff` in a private repo
+5. 📥 Opened a PR in a private repo
+6. ➕ Created a new branch `feature/c-e1` in a private repo
+7. undefined
+8. ➕ Created a new branch `main` in a private repo
+9. 🌍 Made repository [kaigiii/flask_blog](https://github.com/kaigiii/flask_blog) public
+10. ➕ Created a new branch [`main`](https://github.com/kaigiii/flask_blog/tree/main) in [kaigiii/flask_blog](https://github.com/kaigiii/flask_blog)
 <!--END_SECTION:activity-->
 
 ## 📖Usage
