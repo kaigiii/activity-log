@@ -21,16 +21,16 @@ A GitHub Action that automatically updates your README file with the latest acti
 ## ✍️ Example
 
 <!--START_SECTION:activity-->
-1. 📥 Opened a PR in a private repo
-2. ➕ Created a new branch `feature/c-e2` in a private repo
-3. 📥 Opened a PR in a private repo
-4. ➕ Created a new branch `feature/pm-ff` in a private repo
-5. 📥 Opened a PR in a private repo
-6. ➕ Created a new branch `feature/c-e1` in a private repo
-7. undefined
-8. ➕ Created a new branch `main` in a private repo
-9. 🌍 Made repository [kaigiii/flask_blog](https://github.com/kaigiii/flask_blog) public
-10. ➕ Created a new branch [`main`](https://github.com/kaigiii/flask_blog/tree/main) in [kaigiii/flask_blog](https://github.com/kaigiii/flask_blog)
+1. ➕ Created a new branch `feature-e3c` in a private repo
+2. 📥 Opened a PR in a private repo
+3. ➕ Created a new branch `feature/c-e2` in a private repo
+4. 📥 Opened a PR in a private repo
+5. ➕ Created a new branch `feature/pm-ff` in a private repo
+6. 📥 Opened a PR in a private repo
+7. ➕ Created a new branch `feature/c-e1` in a private repo
+8. undefined
+9. ➕ Created a new branch `main` in a private repo
+10. 🌍 Made repository [kaigiii/flask_blog](https://github.com/kaigiii/flask_blog) public
 <!--END_SECTION:activity-->
 
 ## 📖Usage
