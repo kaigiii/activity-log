@@ -22,15 +22,15 @@ A GitHub Action that automatically updates your README file with the latest acti
 
 <!--START_SECTION:activity-->
 1. 📥 Opened a PR in a private repo
-2. ➕ Created a new branch `feature-e3c` in a private repo
+2. ➕ Created a new branch `feature/a-grade-fail-test` in a private repo
 3. 📥 Opened a PR in a private repo
-4. ➕ Created a new branch `feature/c-e2` in a private repo
+4. ➕ Created a new branch `feature-e3c` in a private repo
 5. 📥 Opened a PR in a private repo
-6. ➕ Created a new branch `feature/pm-ff` in a private repo
+6. ➕ Created a new branch `feature/c-e2` in a private repo
 7. 📥 Opened a PR in a private repo
-8. ➕ Created a new branch `feature/c-e1` in a private repo
-9. undefined
-10. ➕ Created a new branch `main` in a private repo
+8. ➕ Created a new branch `feature/pm-ff` in a private repo
+9. 📥 Opened a PR in a private repo
+10. ➕ Created a new branch `feature/c-e1` in a private repo
 <!--END_SECTION:activity-->
 
 ## 📖Usage
