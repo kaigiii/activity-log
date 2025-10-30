@@ -21,16 +21,16 @@ A GitHub Action that automatically updates your README file with the latest acti
 ## ✍️ Example
 
 <!--START_SECTION:activity-->
-1. ➕ Created a new branch `backup-remote-before-forcepush-20251030-055603` in a private repo
-2. 🌍 Made repository [kaigiii/homework6](https://github.com/kaigiii/homework6) public
-3. 📥 Opened [PR #9](https://github.com/kaigiii/homework6/pull/9) in [kaigiii/homework6](https://github.com/kaigiii/homework6)
-4. ➕ Created a new branch [`feature/a-grade-fail-test`](https://github.com/kaigiii/homework6/tree/feature/a-grade-fail-test) in [kaigiii/homework6](https://github.com/kaigiii/homework6)
-5. 📥 Opened a PR in a private repo
-6. ➕ Created a new branch `feature-e3c` in a private repo
-7. 📥 Opened a PR in a private repo
-8. ➕ Created a new branch `feature/c-e2` in a private repo
-9. 📥 Opened [PR #8](https://github.com/kaigiii/homework6/pull/8) in [kaigiii/homework6](https://github.com/kaigiii/homework6)
-10. ➕ Created a new branch [`feature/pm-ff`](https://github.com/kaigiii/homework6/tree/feature/pm-ff) in [kaigiii/homework6](https://github.com/kaigiii/homework6)
+1. ➕ Created a new branch [`main`](https://github.com/kaigiii/B11209044_HW1/tree/main) in [kaigiii/B11209044_HW1](https://github.com/kaigiii/B11209044_HW1)
+2. ➕ Created a new branch `backup-remote-before-forcepush-20251030-055603` in a private repo
+3. 🌍 Made repository [kaigiii/homework6](https://github.com/kaigiii/homework6) public
+4. 📥 Opened [PR #9](https://github.com/kaigiii/homework6/pull/9) in [kaigiii/homework6](https://github.com/kaigiii/homework6)
+5. ➕ Created a new branch [`feature/a-grade-fail-test`](https://github.com/kaigiii/homework6/tree/feature/a-grade-fail-test) in [kaigiii/homework6](https://github.com/kaigiii/homework6)
+6. 📥 Opened a PR in a private repo
+7. ➕ Created a new branch `feature-e3c` in a private repo
+8. 📥 Opened a PR in a private repo
+9. ➕ Created a new branch `feature/c-e2` in a private repo
+10. 📥 Opened [PR #8](https://github.com/kaigiii/homework6/pull/8) in [kaigiii/homework6](https://github.com/kaigiii/homework6)
 <!--END_SECTION:activity-->
 
 ## 📖Usage
